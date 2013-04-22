@@ -169,20 +169,30 @@ class Bitmap {
 	private function createWithAlpha (data:BitmapData, alpha:ByteArray):BitmapData {
 		
 		var alphaBitmap = new BitmapData (data.width, data.height, true);
+		#if html5
+		alpha.position = 0;
+		#else
 		var index = 0;
+		#end
 		
 		for (y in 0...data.height) {
 			
 			for (x in 0...data.width) {
 				
+				#if html5
+				var alphaValue = alpha.readByte();
+				#else
+				var alphaValue = alpha[index ++];
+				#end
+				
 				#if (!neko || haxe3)
 				
-				//alphaBitmap.setPixel32 (x, y, data.getPixel (x, y) + (alpha[index ++] << 24));
+				alphaBitmap.setPixel32 (x, y, data.getPixel (x, y) + (alphaValue << 24));
 				
 				#else
 				
 				var pixel = data.getPixel32 (x, y);
-				pixel.a = alpha[index ++];
+				pixel.a = alphaValue;
 				alphaBitmap.setPixel32 (x, y, pixel);
 				
 				#end
