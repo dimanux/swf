@@ -8,7 +8,7 @@ import flash.utils.ByteArray;
 import format.swf.data.SWFStream;
 import flash.geom.Point;
 
-#if flash
+#if (flash || html5)
 import flash.display.Loader;
 #end
 
@@ -18,7 +18,7 @@ class Bitmap {
 	
 	public var bitmapData:BitmapData;
 	
-	#if flash
+	#if (flash || html5)
 	private var alpha:ByteArray;
 	private var loader:Loader;
 	#end
@@ -140,7 +140,7 @@ class Bitmap {
 				
 			}
 			
-			#if flash
+			#if (flash || html5)
 			
 			loader = new Loader ();
 			this.alpha = alpha;
@@ -177,7 +177,7 @@ class Bitmap {
 				
 				#if (!neko || haxe3)
 				
-				alphaBitmap.setPixel32 (x, y, data.getPixel (x, y) + (alpha[index ++] << 24));
+				//alphaBitmap.setPixel32 (x, y, data.getPixel (x, y) + (alpha[index ++] << 24));
 				
 				#else
 				
@@ -203,7 +203,7 @@ class Bitmap {
 	
 	
 	
-	#if flash
+	#if (flash || html5)
 	
 	private function loader_onComplete (event:Event):Void {
 		

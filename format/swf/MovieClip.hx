@@ -30,7 +30,7 @@ class MovieClip extends format.display.MovieClip {
 	private var objectPool:IntMap <List <DisplayObject>>;
 	private var playing:Bool;
 	private var swf:SWF;
-	
+	private var flattened : Bool = false;
 	
 	public function new (data:format.swf.symbol.Sprite = null) {
 		
@@ -105,6 +105,8 @@ class MovieClip extends format.display.MovieClip {
 			var object:ActiveObject = { object: cast (bitmap, DisplayObject), depth: 0, symbolID: -1, index: 0, waitingLoader: false };
 			
 			activeObjects = [ object ];
+			
+			flattened = true;
 			
 		//} else {
 			
@@ -243,6 +245,7 @@ class MovieClip extends format.display.MovieClip {
 	
 	public override function unflatten ():Void {
 		
+		flattened = false;
 		updateObjects ();
 		
 	}
@@ -482,6 +485,9 @@ class MovieClip extends format.display.MovieClip {
 			}
 			
 		}
+		
+		if (flattened)
+			flatten();
 		
 	}
 	
