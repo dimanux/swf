@@ -9,6 +9,8 @@ import flash.display.SimpleButton;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.text.TextField;
+import flash.geom.Matrix;
+import flash.display.PixelSnapping;
 import format.display.FrameLabel;
 import format.swf.data.Frame;
 import format.SWF;
@@ -84,8 +86,10 @@ class MovieClip extends format.display.MovieClip {
 		//if (#if flash totalFrames #else mTotalFrames #end == 1) {
 			
 			var bounds = getBounds (this);
-			var bitmapData = new BitmapData (Std.int (bounds.right), Std.int (bounds.bottom), true, #if (neko && !haxe3) { a: 0, rgb: 0x000000 } #else 0x00000000 #end);
-			bitmapData.draw (this);
+			var bitmapData = new BitmapData (Math.ceil (bounds.width) + 2, Math.ceil (bounds.height) + 2, true, #if (neko && !haxe3) { a: 0, rgb: 0x000000 } #else 0x00000000 #end);
+			var matrix = new Matrix();
+			matrix.translate( -bounds.left + 1, -bounds.top + 1);
+			bitmapData.draw (this, matrix, null, null, null, true);
 			
 			for (activeObject in activeObjects) {
 				
@@ -93,8 +97,9 @@ class MovieClip extends format.display.MovieClip {
 				
 			}
 			
-			var bitmap = new Bitmap (bitmapData);
-			bitmap.smoothing = true;
+			var bitmap = new Bitmap (bitmapData, PixelSnapping.AUTO, true);
+			bitmap.x = bounds.left - 1;
+			bitmap.y = bounds.top - 1;
 			addChild (bitmap);
 			
 			var object:ActiveObject = { object: cast (bitmap, DisplayObject), depth: 0, symbolID: -1, index: 0, waitingLoader: false };
