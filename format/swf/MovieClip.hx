@@ -250,6 +250,7 @@ class MovieClip extends format.display.MovieClip {
 			var frame = frames[currentFrame];
 			var depthChanged = false;
 			var waitingLoader = false;
+			var addWaitingLoaderListener = false;
 			
 			if (frame != null) {
 				
@@ -434,6 +435,9 @@ class MovieClip extends format.display.MovieClip {
 					
 					var act = { object: displayObject, depth: depth, index: idx, symbolID: slot.symbolID, waitingLoader: waitingLoader };
 					
+					if (waitingLoader)
+						addWaitingLoaderListener = true;
+					
 					newActiveObjects.push (act);
 					depthChanged = true;
 					
@@ -466,6 +470,12 @@ class MovieClip extends format.display.MovieClip {
 				
 			}
 			
+			if (addWaitingLoaderListener)
+			{
+				removeEventListener(Event.ENTER_FRAME, this_onWaitingLoader);
+				addEventListener(Event.ENTER_FRAME, this_onWaitingLoader);
+			}
+			
 		}
 		
 	}
@@ -494,6 +504,11 @@ class MovieClip extends format.display.MovieClip {
 			
 		}
 		
+	}
+	
+	private function this_onWaitingLoader(event:Event):Void
+	{
+		updateObjects();
 	}
 	
 	

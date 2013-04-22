@@ -249,7 +249,8 @@ class SWFStream {
 	public function readBytes (length:Int):ByteArray {
 		
 		var bytes = new ByteArray ();
-		stream.readBytes (bytes, 0, length);
+		if (length > 0)
+			stream.readBytes (bytes, 0, length);
 		tagRead += length;
 		return bytes;
 		

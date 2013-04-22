@@ -28,9 +28,7 @@ class Filters {
 		for (i in 0...count) {
 			
 			var filterID = stream.readByte ();
-			
-			filters.push (
-				
+			var filter = 
 				switch (filterID) {
 					case 0 : createDropShadowFilter (stream);
 					case 1 : createBlurFilter (stream);
@@ -41,9 +39,10 @@ class Filters {
 					case 6 : createColorMatrixFilter (stream);
 					case 7 : createGradientBevelFilter (stream);
 					default: throw "Unknown filter : " + filterID + "  " + i + "/" + count; 
-				}
-				
-			);
+				};
+			
+			if (filter != null)
+				filters.push (filter);
 			
 		}
 		

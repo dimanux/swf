@@ -118,7 +118,12 @@ class Bitmap {
 			
 			if (version == 1 && jpegTables != null) {
 				
-				buffer = jpegTables;
+				var size = jpegTables.length + stream.getBytesLeft ();
+				jpegTables.position = 0;
+				buffer = new nme.utils.ByteArray();
+				buffer.writeBytes(jpegTables);
+				buffer.writeBytes(stream.readBytes(stream.getBytesLeft ()));
+				buffer.position = 0;
 				
 			} else if (version == 2) {
 				
