@@ -86,6 +86,10 @@ class MovieClip extends format.display.MovieClip {
 		//if (#if flash totalFrames #else mTotalFrames #end == 1) {
 			
 			var bounds = getBounds (this);
+			if (bounds.width < 0)
+				bounds.width = 0;
+			if (bounds.height < 0)
+				bounds.height = 0;
 			var bitmapData = new BitmapData (Math.ceil (bounds.width) + 2, Math.ceil (bounds.height) + 2, true, #if (neko && !haxe3) { a: 0, rgb: 0x000000 } #else 0x00000000 #end);
 			var matrix = new Matrix();
 			matrix.translate( -bounds.left + 1, -bounds.top + 1);
@@ -440,6 +444,15 @@ class MovieClip extends format.display.MovieClip {
 					
 					var idx = slot.findClosestFrame (0, currentFrame);
 					slot.attributes[idx].apply (displayObject);
+					
+					switch (slot.symbol) {
+							
+							case editTextSymbol (text):
+								
+								text.applyBounds(cast(displayObject, TextField));
+								
+							default:
+					}
 					
 					var act = { object: displayObject, depth: depth, index: idx, symbolID: slot.symbolID, waitingLoader: waitingLoader };
 					

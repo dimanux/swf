@@ -183,5 +183,8 @@ class EditText {
 		
 	}
 	
-	
+	public function applyBounds(textField:TextField):Void {
+		textField.x += rect.x;
+		textField.y += rect.y;
+	}
 }
