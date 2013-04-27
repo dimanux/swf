@@ -164,6 +164,7 @@ class EditText {
 			
 		}
 		
+		textField.defaultTextFormat = textFormat;
 		textField.setTextFormat (textFormat);
 		textField.selectable = !noSelect;
 		
