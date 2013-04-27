@@ -346,11 +346,11 @@ class MovieClip extends format.display.MovieClip {
 								
 								var s = new Shape ();
 								
-								if (shape.hasBitmapRepeat || shape.hasCurves || shape.hasGradientFill) {
+								//if (shape.hasBitmapRepeat || shape.hasCurves || shape.hasGradientFill) {
 									
 									s.cacheAsBitmap = true; // temp fix
 									
-								}
+								//}
 								
 								//shape.Render(new nme.display.DebugGfx());
 								waitingLoader = shape.render (s.graphics);

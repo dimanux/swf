@@ -10,6 +10,11 @@ import format.swf.data.SWFStream;
 import format.swf.symbol.Symbol;
 import format.SWF;
 
+#if haxe3
+import haxe.ds.IntMap;
+#else
+typedef IntMap<T> = IntHash<T>;
+#end
 
 class Shape {
 	
@@ -308,55 +313,84 @@ class Shape {
 	
 	private function flushCommands (edges:Array <RenderCommand>, fills:Array <ShapeEdge>) {
 		
-		var left = fills.length;
-		
-		while (left > 0) {
-			
-			var first = fills[0];
-			fills[0] = fills[--left];
-			
-			if (first.fillStyle >= fillStyles.length) {
+		// Slice fills in Arrays by fillStyle
+		var fillsMap = new IntMap< Array<ShapeEdge> >();
+		for (fill in fills)
+		{
+			if (fill.fillStyle >= fillStyles.length) {
 				
 				throw ("Invalid fill style");
-				
+					
 			}
 			
-			commands.push (fillStyles[first.fillStyle]);
-			
-			var mx = first.x0;
-			var my = first.y0;
-			
-			commands.push (function (gfx:Graphics) { 
+			if (!fillsMap.exists(fill.fillStyle))
+				fillsMap.set(fill.fillStyle, new Array<ShapeEdge>());
 				
-				gfx.moveTo (mx, my);
-				
-			});
+			fillsMap.get(fill.fillStyle).push(fill);
+		}
+		
+		for (fillStyle in fillsMap.keys())
+		{
+			var fills = fillsMap.get(fillStyle);
 			
-			commands.push (first.asCommand ());
+			commands.push (fillStyles[fillStyle]);
+		
+			var left = fills.length;
 			
-			var prev = first;
-			var loop = false;
-			
-			while (!loop) {
+			while (left > 0) {
 				
-				var found = false;
+				var first = fills[0];
+				fills[0] = fills[--left];
 				
-				for (i in 0...left) {
+				var mx = first.x0;
+				var my = first.y0;
+				
+				commands.push (function (gfx:Graphics) { 
 					
-					if (prev.connects(fills[i])) {
+					gfx.moveTo (mx, my);
+					
+				});
+				
+				commands.push (first.asCommand ());
+				
+				var prev = first;
+				var loop = false;
+				
+				while (!loop) {
+					
+					var found = false;
+					
+					for (i in 0...left) {
 						
-						prev = fills[i];
-						fills[i] = fills[--left];
-						
-						commands.push (prev.asCommand ());
-						
-						found = true;
-						
-						if (prev.connects (first)) {
+						if (prev.connects(fills[i])) {
 							
-							loop = true;
+							prev = fills[i];
+							fills[i] = fills[--left];
+							
+							commands.push (prev.asCommand ());
+							
+							found = true;
+							
+							if (prev.connects (first)) {
+								
+								loop = true;
+								
+							}
+							
+							break;
 							
 						}
+						
+					}
+					
+					if (!found) {
+						
+						trace("Remaining:");
+						
+						for (f in 0...left)
+							fills[f].dump ();
+						
+						throw("Dangling fill : " + prev.x1 + "," + prev.y1 + "  " + prev.fillStyle);
 						
 						break;
 						
@@ -364,21 +398,7 @@ class Shape {
 					
 				}
 				
-				if (!found) {
-					
-					trace("Remaining:");
-					
-					for (f in 0...left)
-						fills[f].dump ();
-					
-					throw("Dangling fill : " + prev.x1 + "," + prev.y1 + "  " + prev.fillStyle);
-					
-					break;
-					
-				}
-				
 			}
-			
 		}
 		
 		if (fills.length > 0) {
