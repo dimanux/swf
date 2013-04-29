@@ -168,7 +168,7 @@ class EditText {
 		textField.setTextFormat (textFormat);
 		textField.selectable = !noSelect;
 		
-		//textField.embedFonts = useOutlines;
+		textField.embedFonts = useOutlines;
 		
 		if (html) {
 			
@@ -185,7 +185,8 @@ class EditText {
 	}
 	
 	public function applyBounds(textField:TextField):Void {
-		textField.x += rect.x;
-		textField.y += rect.y;
+		var offset = textField.transform.matrix.transformPoint(rect.topLeft);
+		textField.x = offset.x;
+		textField.y = offset.y;
 	}
 }

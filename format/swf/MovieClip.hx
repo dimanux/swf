@@ -304,6 +304,15 @@ class MovieClip extends format.display.MovieClip {
 						var attributes = depthSlot.attributes[activeObject.index];
 						attributes.apply (activeObject.object);
 						
+						switch (depthSlot.symbol) {
+							
+							case editTextSymbol (text):
+								
+								text.applyBounds(cast(activeObject.object, TextField));
+								
+							default:
+						}
+						
 						newActiveObjects.push (activeObject);
 						
 					}
