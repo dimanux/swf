@@ -42,7 +42,7 @@ class DisplayAttributes {
 		
 		object.name = name;
 		
-		if (object.filters != filters) {
+		if ((filters == null && object.filters.length > 0) || (filters != null && object.filters != filters)) {
 			
 			object.filters = filters;
 			
