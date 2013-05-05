@@ -23,7 +23,7 @@ class EditText {
 	private var noSelect:Bool;
 	private var readOnly:Bool;
 	private var rect:Rectangle;
-	private var text:String;
+	public var text(default, null):String;
 	private var textFormat:TextFormat;
 	private var useOutlines:Bool;
 	private var wasStatic:Bool;
