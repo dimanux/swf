@@ -41,38 +41,46 @@ class MovieClip extends format.display.MovieClip {
 		enabled = true;
 		playing = false;
 		
+		#if (!openfl || !flash)
 		currentFrameLabel = null;
 		currentLabel = null;
 		currentLabels = new Array <FrameLabel> ();
+		#end
 		
 		if (data != null) {
 			
-			totalFrames = data.frameCount;
-			currentFrame = totalFrames;
-			framesLoaded = totalFrames;
+			#if openfl __totalFrames #else totalFrames #end = data.frameCount;
+			#if openfl __currentFrame #else currentFrame #end = #if openfl __totalFrames #else totalFrames #end;
+			#if (!openfl || !flash)
+			framesLoaded = #if openfl __totalFrames #else totalFrames #end;
+			#end
 			
 			swf = data.swf;
 			frames = data.frames;
 			
+			#if (!openfl || !flash)
 			for (label in data.frameLabels.keys ()) {
 				
 				var frameLabel = new FrameLabel (data.frameLabels.get (label), label);
 				currentLabels.push (frameLabel);
 				
 			}
+			#end
 			
 			activeObjects = new Array <ActiveObject> ();
 			
 			//gotoAndPlay (1);
-			currentFrame = 1;
+			#if openfl __currentFrame #else currentFrame #end = 1;
 			updateObjects ();
 			play ();
 			
 		} else {
 			
-			currentFrame = 1;
-			totalFrames = 1;
+			#if openfl __currentFrame #else currentFrame #end = 1;
+			#if openfl __totalFrames #else totalFrames #end = 1;
+			#if (!openfl || !flash)
 			framesLoaded = 1;
+			#end
 			
 		}
 		
@@ -83,7 +91,7 @@ class MovieClip extends format.display.MovieClip {
 		
 		// Should we support flatten + playing multiple frames?
 		
-		//if (#if flash totalFrames #else mTotalFrames #end == 1) {
+		//if (#if flash #if openfl __totalFrames #else totalFrames #end #else m#if openfl __totalFrames #else totalFrames #end #end == 1) {
 			
 			var bounds = getBounds (this);
 			if (bounds.width < 0)
@@ -121,9 +129,9 @@ class MovieClip extends format.display.MovieClip {
 	}
 	
 	
-	public override function gotoAndPlay (frame:Dynamic, scene:String = null):Void {
+	public override function gotoAndPlay (frame:#if openfl flash.utils.Object #else Dynamic #end, scene:String = null):Void {
 		
-		if (frame != currentFrame) {
+		if (frame != #if openfl __currentFrame #else currentFrame #end) {
 			
 			if (Std.is (frame, String)) {
 				
@@ -131,7 +139,7 @@ class MovieClip extends format.display.MovieClip {
 					
 					if (frameLabel.name == frame) {
 						
-						currentFrame = frameLabel.frame;
+						#if openfl __currentFrame #else currentFrame #end = frameLabel.frame;
 						break;
 						
 					}
@@ -140,7 +148,7 @@ class MovieClip extends format.display.MovieClip {
 				
 			} else {
 				
-				currentFrame = frame;
+				#if openfl __currentFrame #else currentFrame #end = frame;
 				
 			}
 			
@@ -153,9 +161,9 @@ class MovieClip extends format.display.MovieClip {
 	}
 	
 	
-	public override function gotoAndStop (frame:Dynamic, scene:String = null):Void {
+	public override function gotoAndStop (frame:#if openfl flash.utils.Object #else Dynamic #end, scene:String = null):Void {
 		
-		if (frame != currentFrame) {
+		if (frame != #if openfl __currentFrame #else currentFrame #end) {
 			
 			if (Std.is (frame, String)) {
 				
@@ -163,7 +171,7 @@ class MovieClip extends format.display.MovieClip {
 					
 					if (frameLabel.name == frame) {
 						
-						currentFrame = frameLabel.frame;
+						#if openfl __currentFrame #else currentFrame #end = frameLabel.frame;
 						break;
 						
 					}
@@ -172,7 +180,7 @@ class MovieClip extends format.display.MovieClip {
 				
 			} else {
 				
-				currentFrame = frame;
+				#if openfl __currentFrame #else currentFrame #end = frame;
 				
 			}
 			
@@ -187,11 +195,11 @@ class MovieClip extends format.display.MovieClip {
 	
 	public override function nextFrame ():Void {
 		
-		var next = currentFrame + 1;
+		var next = #if openfl __currentFrame #else currentFrame #end + 1;
 		
-		if (next > totalFrames) {
+		if (next > #if openfl __totalFrames #else totalFrames #end) {
 			
-			next = totalFrames;
+			next = #if openfl __totalFrames #else totalFrames #end;
 			
 		}
 		
@@ -209,7 +217,7 @@ class MovieClip extends format.display.MovieClip {
 	
 	public override function play ():Void {
 		
-		if (totalFrames > 1) {
+		if (#if openfl __totalFrames #else totalFrames #end > 1) {
 			
 			playing = true;
 			removeEventListener (Event.ENTER_FRAME, this_onEnterFrame);
@@ -226,7 +234,7 @@ class MovieClip extends format.display.MovieClip {
 	
 	public override function prevFrame ():Void {
 		
-		var previous = currentFrame - 1;
+		var previous = #if openfl __currentFrame #else currentFrame #end - 1;
 		
 		if (previous < 1) {
 			
@@ -259,7 +267,7 @@ class MovieClip extends format.display.MovieClip {
 		
 		if (frames != null) {
 			
-			var frame = frames[currentFrame];
+			var frame = frames[#if openfl __currentFrame #else currentFrame #end];
 			var depthChanged = false;
 			var waitingLoader = false;
 			var addWaitingLoaderListener = false;
@@ -300,7 +308,7 @@ class MovieClip extends format.display.MovieClip {
 						// remove from our "todo" list
 						frameObjects.remove (activeObject.depth);
 						
-						activeObject.index = depthSlot.findClosestFrame (activeObject.index, currentFrame);
+						activeObject.index = depthSlot.findClosestFrame (activeObject.index, #if openfl __currentFrame #else currentFrame #end);
 						var attributes = depthSlot.attributes[activeObject.index];
 						attributes.apply (activeObject.object);
 						
@@ -451,7 +459,7 @@ class MovieClip extends format.display.MovieClip {
 						
 					}
 					
-					var idx = slot.findClosestFrame (0, currentFrame);
+					var idx = slot.findClosestFrame (0, #if openfl __currentFrame #else currentFrame #end);
 					slot.attributes[idx].apply (displayObject);
 					
 					switch (slot.symbol) {
@@ -475,6 +483,8 @@ class MovieClip extends format.display.MovieClip {
 				
 				activeObjects = newActiveObjects;
 				
+				#if (!openfl || !flash)
+				
 				currentFrameLabel = null;
 				
 				for (frameLabel in currentLabels) {
@@ -497,6 +507,8 @@ class MovieClip extends format.display.MovieClip {
 					}
 					
 				}
+				
+				#end
 				
 			}
 			
@@ -525,11 +537,11 @@ class MovieClip extends format.display.MovieClip {
 		
 		if (playing) {
 			
-			currentFrame++;
+			#if openfl __currentFrame #else currentFrame #end ++;
 			
-			if (currentFrame > totalFrames) {
+			if (#if openfl __currentFrame #else currentFrame #end > #if openfl __totalFrames #else totalFrames #end) {
 				
-				currentFrame = 1;
+				#if openfl __currentFrame #else currentFrame #end = 1;
 				
 			}
 			

@@ -467,7 +467,7 @@ class Shape {
 				var interp = stream.readInterpolationMethod ();
 				var numColors = stream.readBits (4);
 				
-				var colors #if flash :Array<UInt> #end = [];
+				var colors #if (flash && !openfl) :Array<UInt> #end = [];
 				var alphas = [];
 				var ratios = [];
 				
@@ -649,7 +649,7 @@ class Shape {
 						var interp = stream.readInterpolationMethod ();
 						var numColors = stream.readBits (4);
 						
-						var colors #if flash :Array<UInt> #end = [];
+						var colors #if (flash && !openfl) :Array<UInt> #end = [];
 						var alphas = [];
 						var ratios = [];
 						
