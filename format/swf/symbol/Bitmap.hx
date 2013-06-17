@@ -120,7 +120,7 @@ class Bitmap {
 				
 				var size = jpegTables.length + stream.getBytesLeft ();
 				jpegTables.position = 0;
-				buffer = new nme.utils.ByteArray();
+				buffer = new flash.utils.ByteArray();
 				buffer.writeBytes(jpegTables);
 				buffer.writeBytes(stream.readBytes(stream.getBytesLeft ()));
 				buffer.position = 0;
