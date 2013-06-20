@@ -18,6 +18,7 @@ class DisplayAttributes {
 	public var ratio:Null<Int>;
 	public var symbolID:Int;
 	
+	private static var defaultColorTransform:ColorTransform = new ColorTransform();
 	
 	public function new () {
 		
@@ -38,6 +39,9 @@ class DisplayAttributes {
 			
 			object.transform.colorTransform = colorTransform;
 			
+		}
+		else {
+			object.transform.colorTransform = defaultColorTransform;
 		}
 		
 		object.name = name;
