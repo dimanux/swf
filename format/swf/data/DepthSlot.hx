@@ -39,7 +39,7 @@ class DepthSlot {
 			
 		} else if (last > 0) {
 			
-			if (attributes[last - 1].frame > frame) {
+			if (attributes[last - 1].frame >= frame) {
 				
 				last = 0;
 				
