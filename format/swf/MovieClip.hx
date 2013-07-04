@@ -276,6 +276,7 @@ class MovieClip extends format.display.MovieClip {
 				
 				var frameObjects = frame.copyObjectSet ();
 				var newActiveObjects = new Array <ActiveObject> ();
+				var clipLayers = new Array< {depth:Int, clipDepth:Int, mask:DisplayObject} > ();
 				
 				for (activeObject in activeObjects) {
 					
@@ -323,6 +324,9 @@ class MovieClip extends format.display.MovieClip {
 						
 						newActiveObjects.push (activeObject);
 						
+						if (depthSlot.clipDepth != 0)
+							clipLayers.push({depth: activeObject.depth, clipDepth: depthSlot.clipDepth, mask: activeObject.object});
+						
 					}
 					
 				}
@@ -364,7 +368,8 @@ class MovieClip extends format.display.MovieClip {
 								var s = new Shape ();
 								
 								//if (shape.hasBitmapRepeat || shape.hasCurves || shape.hasGradientFill) {
-									
+								
+								if (slot.clipDepth == 0)	
 									s.cacheAsBitmap = true; // temp fix
 									
 								//}
@@ -479,9 +484,31 @@ class MovieClip extends format.display.MovieClip {
 					newActiveObjects.push (act);
 					depthChanged = true;
 					
+					if (slot.clipDepth != 0)
+						clipLayers.push({depth: depth, clipDepth: slot.clipDepth, mask: act.object});
 				}
 				
 				activeObjects = newActiveObjects;
+				
+				if (clipLayers.length > 0)
+				{
+					for (child in activeObjects) {
+						var depth = child.depth;
+						var clipped = false;
+						for (layer in clipLayers)
+						{
+							if (layer.depth < depth && depth < layer.clipDepth)
+							{
+								if (child.object.mask != layer.mask)
+									child.object.mask = layer.mask;
+								clipped = true;
+								break;
+							}
+						}
+						if (!clipped && child.object.mask != null)
+							child.object.mask = null;
+					}
+				}
 				
 				#if (!openfl || !flash)
 				

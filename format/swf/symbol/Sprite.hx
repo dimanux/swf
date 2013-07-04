@@ -72,7 +72,7 @@ class Sprite {
 				
 			}
 			
-			frame.place (symbolID, symbol, depth, matrix, colorTransform, null, null, null);
+			frame.place (symbolID, symbol, depth, 0, matrix, colorTransform, null, null, null);
 			
 		} else if (version == 2 || version == 3) {
 			
@@ -177,7 +177,7 @@ class Sprite {
 				if (hasSymbol) {
 					
 					//frame.remove (depth);
-					frame.place (symbolID, swf.getSymbol (symbolID), depth, matrix, colorTransform, ratio, name, filters);
+					frame.place (symbolID, swf.getSymbol (symbolID), depth, clipDepth, matrix, colorTransform, ratio, name, filters);
 					
 				} else {
 					
@@ -189,7 +189,7 @@ class Sprite {
 				
 				if (swf.hasSymbol (symbolID)) {
 					
-					frame.place (symbolID, swf.getSymbol (symbolID), depth, matrix, colorTransform, ratio, name, filters);
+					frame.place (symbolID, swf.getSymbol (symbolID), depth, clipDepth, matrix, colorTransform, ratio, name, filters);
 					
 				}
 				

@@ -12,14 +12,16 @@ class DepthSlot {
 	public var attributes:Array <DisplayAttributes>;
 	public var symbol:Symbol;
 	public var symbolID:Int;
+	public var clipDepth:Int;
 	
 	private var cacheAttributes:DisplayAttributes;
 
 
-	public function new (symbolID:Int, symbol:Symbol, attributes:DisplayAttributes) {
+	public function new (symbolID:Int, symbol:Symbol, attributes:DisplayAttributes, clipDepth:Int) {
 		
 		this.symbolID = symbolID;
 		this.symbol = symbol;
+		this.clipDepth = clipDepth;
 		
 		this.attributes = [];
 		this.attributes.push (attributes);

@@ -76,7 +76,7 @@ class Frame {
 	}
 	
 	
-	public function place (symbolID:Int, symbol:Symbol, depth:Int, matrix:Matrix, colorTransform:ColorTransform, ratio:Null<Int>, name:Null<String>, filters:Null<Array<BitmapFilter>>):Void {
+	public function place (symbolID:Int, symbol:Symbol, depth:Int, clipDepth:Int, matrix:Matrix, colorTransform:ColorTransform, ratio:Null<Int>, name:Null<String>, filters:Null<Array<BitmapFilter>>):Void {
 		
 		var previousObject = objects.get (depth);
 		
@@ -111,7 +111,7 @@ class Frame {
 		attributes.filters = filters;
 		attributes.symbolID = symbolID;
 		
-		var object = new DepthSlot (symbolID, symbol, attributes);
+		var object = new DepthSlot (symbolID, symbol, attributes, clipDepth);
 		objects.set (depth, object);
 		
 	}
