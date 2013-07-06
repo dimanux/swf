@@ -286,7 +286,7 @@ class SWFStream {
 		if (!hasOffset && !hasMultiplier) {
 			
 			alignBits ();
-			return null;
+			return result;
 			
 		}
 		
